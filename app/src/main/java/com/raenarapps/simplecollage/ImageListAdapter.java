@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,19 +31,33 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         Item item = itemList.get(position);
-        Images images = item.getImages();
+        final Images images = item.getImages();
         if (images != null) {
             String url = images.getStandardResolution().getUrl();
             Picasso.with(context).load(url)
                     .fit()
                     .centerCrop()
                     .into(holder.image);
+
+            holder.frame.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!images.isSelected()) {
+                        images.setIsSelected(true);
+                        holder.updateCheckbox(true);
+                    } else {
+                        images.setIsSelected(false);
+                        holder.updateCheckbox(false);
+                    }
+                }
+            });
+            holder.updateCheckbox(images.isSelected());
         }
         holder.title.setText(item.getCaption().getText());
         holder.likes.setText(item.getLikes().getCount().toString());
-        Long timeInMillis = Long.valueOf(item.getCaption().getCreatedTime())*1000;
+        Long timeInMillis = Long.valueOf(item.getCaption().getCreatedTime()) * 1000;
         holder.date.setText(Utility.getFormattedDate(timeInMillis));
     }
 
@@ -53,6 +68,8 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView image;
+        private ImageView checkbox;
+        private FrameLayout frame;
         private TextView title;
         private TextView likes;
         private TextView date;
@@ -63,6 +80,16 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
             title = (TextView) itemView.findViewById(R.id.listitem_title);
             likes = (TextView) itemView.findViewById(R.id.listitem_likes);
             date = (TextView) itemView.findViewById(R.id.listitem_date);
+            checkbox = (ImageView) itemView.findViewById(R.id.listitem_checkbox);
+            frame = (FrameLayout) itemView.findViewById(R.id.listitem_frame);
+        }
+
+        public void updateCheckbox(boolean isSelected) {
+            if (isSelected) {
+                checkbox.setImageResource(R.drawable.check_1_icon);
+            } else {
+                checkbox.setImageResource(R.drawable.check_0_icon);
+            }
         }
     }
 }
