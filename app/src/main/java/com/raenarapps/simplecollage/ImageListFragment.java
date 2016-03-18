@@ -16,6 +16,8 @@ import com.raenarapps.simplecollage.network.InstagramService;
 import com.raenarapps.simplecollage.pojo.InstagramMedia;
 import com.raenarapps.simplecollage.pojo.Item;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -46,6 +48,7 @@ public class ImageListFragment extends Fragment {
                     new Gson().fromJson(savedInstanceState.getString(JSON_INSTAGRAM_MEDIA), InstagramMedia.class);
             if (instagramMedia != null) {
                 items = instagramMedia.getItems();
+                sortList(items);
             }
         } else {
             Retrofit retrofit = new Retrofit.Builder()
@@ -60,6 +63,7 @@ public class ImageListFragment extends Fragment {
                 public void onResponse(Call<InstagramMedia> call, Response<InstagramMedia> response) {
                     instagramMedia = response.body();
                     List<Item> itemList = instagramMedia.getItems();
+                    sortList(itemList);
                     recyclerView.setAdapter(new ImageListAdapter(itemList, getContext()));
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                     Log.d(TAG,"response");
@@ -73,6 +77,15 @@ public class ImageListFragment extends Fragment {
         }
         recyclerView.setAdapter(new ImageListAdapter(items, getContext()));
         return rootView;
+    }
+
+    private void sortList(List<Item> items) {
+        Collections.sort(items, new Comparator<Item>() {
+            @Override
+            public int compare(Item lhs, Item rhs) {
+                return rhs.getLikes().getCount().compareTo(lhs.getLikes().getCount());
+            }
+        });
     }
 
     @Override
