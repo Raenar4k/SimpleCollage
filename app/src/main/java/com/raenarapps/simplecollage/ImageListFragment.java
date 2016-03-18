@@ -18,6 +18,7 @@ import com.raenarapps.simplecollage.pojo.Item;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -32,6 +33,7 @@ public class ImageListFragment extends Fragment {
     Button buttonGET;
     private RecyclerView recyclerView;
     private InstagramMedia instagramMedia;
+    private HashMap<Integer, String> selectedImagesMap;
 
 
     @Nullable
@@ -66,7 +68,7 @@ public class ImageListFragment extends Fragment {
                     sortList(itemList);
                     recyclerView.setAdapter(new ImageListAdapter(itemList, getContext()));
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    Log.d(TAG,"response");
+                    Log.d(TAG, "response");
                 }
 
                 @Override
@@ -76,6 +78,14 @@ public class ImageListFragment extends Fragment {
             });
         }
         recyclerView.setAdapter(new ImageListAdapter(items, getContext()));
+
+        buttonGET.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedImagesMap = ((ImageListAdapter) recyclerView.getAdapter()).getSelectedImagesMap();
+                Log.d(TAG, "images selected =" + selectedImagesMap.size());
+            }
+        });
         return rootView;
     }
 
@@ -91,7 +101,7 @@ public class ImageListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
-        if (instagramMedia != null ){
+        if (instagramMedia != null) {
             String json = new Gson().toJson(instagramMedia);
             bundle.putString(JSON_INSTAGRAM_MEDIA, json);
         }

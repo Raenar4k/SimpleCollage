@@ -13,15 +13,31 @@ import com.raenarapps.simplecollage.pojo.Images;
 import com.raenarapps.simplecollage.pojo.Item;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.ViewHolder> {
     List<Item> itemList;
     Context context;
+    HashMap<Integer,String> selectedImagesMap;
 
     public ImageListAdapter(List<Item> itemList, Context context) {
         this.itemList = itemList;
         this.context = context;
+        findSelectedImages(itemList);
+    }
+
+    private void findSelectedImages(List<Item> itemList) {
+        selectedImagesMap = new HashMap<>();
+        if (itemList != null){
+            for (int i = 0; i < itemList.size(); i++) {
+                Images images = itemList.get(i).getImages();
+                if (images != null) {
+                    if (images.isSelected())
+                        selectedImagesMap.put(i,images.getStandardResolution().getUrl());
+                }
+            }
+        }
     }
 
     @Override
@@ -31,11 +47,11 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         Item item = itemList.get(position);
         final Images images = item.getImages();
         if (images != null) {
-            String url = images.getStandardResolution().getUrl();
+            final String url = images.getStandardResolution().getUrl();
             Picasso.with(context).load(url)
                     .fit()
                     .centerCrop()
@@ -47,9 +63,11 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
                     if (!images.isSelected()) {
                         images.setIsSelected(true);
                         holder.updateCheckbox(true);
+                        selectedImagesMap.put(position, url);
                     } else {
                         images.setIsSelected(false);
                         holder.updateCheckbox(false);
+                        selectedImagesMap.remove(position);
                     }
                 }
             });
@@ -59,6 +77,10 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
         holder.likes.setText(item.getLikes().getCount().toString());
         Long timeInMillis = Long.valueOf(item.getCaption().getCreatedTime()) * 1000;
         holder.date.setText(Utility.getFormattedDate(timeInMillis));
+    }
+
+    public HashMap<Integer,String> getSelectedImagesMap(){
+        return selectedImagesMap;
     }
 
     @Override
