@@ -3,6 +3,8 @@ package com.raenarapps.simplecollage;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,13 +29,19 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ImageListFragment extends Fragment {
+public class ImageListFragment extends Fragment implements
+        ImageListAdapter.OnImageClickListener, Callback<InstagramMedia> {
+
     private static final String TAG = ImageListFragment.class.getSimpleName();
     public static final String JSON_INSTAGRAM_MEDIA = "JSON_INSTAGRAM_MEDIA";
+    public static final String IMAGES_TOTAL_COUNT = "IMAGES_TOTAL_COUNT";
+    public static final String IMAGES_SELECTED_COUNT = "IMAGES_SELECTED_COUNT";
     Button buttonGET;
     private RecyclerView recyclerView;
     private InstagramMedia instagramMedia;
     private HashMap<Integer, String> selectedImagesMap;
+    private int imagesTotalCount;
+    private int imagesSelectedCount;
 
 
     @Nullable
@@ -50,7 +58,10 @@ public class ImageListFragment extends Fragment {
                     new Gson().fromJson(savedInstanceState.getString(JSON_INSTAGRAM_MEDIA), InstagramMedia.class);
             if (instagramMedia != null) {
                 items = instagramMedia.getItems();
+                imagesTotalCount = savedInstanceState.getInt(IMAGES_TOTAL_COUNT);
+                imagesSelectedCount = savedInstanceState.getInt(IMAGES_SELECTED_COUNT);
                 sortList(items);
+                updateActionBar(imagesSelectedCount, imagesTotalCount);
             }
         } else {
             Retrofit retrofit = new Retrofit.Builder()
@@ -60,30 +71,13 @@ public class ImageListFragment extends Fragment {
             InstagramService service = retrofit.create(InstagramService.class);
             Call<InstagramMedia> userPhotos = service.getUserPhotos("appkode");
             Log.d(TAG, "enqueue");
-            userPhotos.enqueue(new Callback<InstagramMedia>() {
-                @Override
-                public void onResponse(Call<InstagramMedia> call, Response<InstagramMedia> response) {
-                    instagramMedia = response.body();
-                    List<Item> itemList = instagramMedia.getItems();
-                    sortList(itemList);
-                    recyclerView.setAdapter(new ImageListAdapter(itemList, getContext()));
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    Log.d(TAG, "response");
-                }
-
-                @Override
-                public void onFailure(Call<InstagramMedia> call, Throwable t) {
-
-                }
-            });
+            userPhotos.enqueue(this);
         }
-        recyclerView.setAdapter(new ImageListAdapter(items, getContext()));
+        recyclerView.setAdapter(new ImageListAdapter(items, getContext(), this));
 
         buttonGET.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedImagesMap = ((ImageListAdapter) recyclerView.getAdapter()).getSelectedImagesMap();
-                Log.d(TAG, "images selected =" + selectedImagesMap.size());
             }
         });
         return rootView;
@@ -99,12 +93,45 @@ public class ImageListFragment extends Fragment {
     }
 
     @Override
+    public void onImageClick(HashMap<Integer, String> selectedImagesMap, int totalCount) {
+        imagesSelectedCount = selectedImagesMap.size();
+        updateActionBar(selectedImagesMap.size(), imagesTotalCount);
+    }
+
+    private void updateActionBar(int countSelected, int countTotal) {
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(countSelected + " из " + countTotal);
+        }
+    }
+
+    @Override
+    public void onResponse(Call<InstagramMedia> call, Response<InstagramMedia> response) {
+        instagramMedia = response.body();
+        final List<Item> itemList = instagramMedia.getItems();
+        sortList(itemList);
+        imagesTotalCount = itemList.size();
+        recyclerView.setAdapter(new ImageListAdapter(itemList, getContext(), this));
+        selectedImagesMap = ((ImageListAdapter) recyclerView.getAdapter()).getSelectedImagesMap();
+        imagesSelectedCount = selectedImagesMap.size();
+        updateActionBar(imagesSelectedCount, imagesTotalCount);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        Log.d(TAG, "response");
+    }
+
+    @Override
+    public void onFailure(Call<InstagramMedia> call, Throwable t) {
+
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         if (instagramMedia != null) {
             String json = new Gson().toJson(instagramMedia);
             bundle.putString(JSON_INSTAGRAM_MEDIA, json);
+            bundle.putInt(IMAGES_TOTAL_COUNT, imagesTotalCount);
+            bundle.putInt(IMAGES_SELECTED_COUNT, imagesSelectedCount);
         }
     }
-
 }

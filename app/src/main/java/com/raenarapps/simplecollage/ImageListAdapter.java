@@ -17,13 +17,19 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.ViewHolder> {
-    List<Item> itemList;
-    Context context;
-    HashMap<Integer,String> selectedImagesMap;
+    private List<Item> itemList;
+    private Context context;
+    private HashMap<Integer,String> selectedImagesMap;
+    private OnImageClickListener listener;
 
-    public ImageListAdapter(List<Item> itemList, Context context) {
+    interface OnImageClickListener{
+        void onImageClick(HashMap<Integer,String> selectedImagesMap, int totalCount);
+    }
+
+    public ImageListAdapter(List<Item> itemList, Context context, OnImageClickListener listener) {
         this.itemList = itemList;
         this.context = context;
+        this.listener = listener;
         findSelectedImages(itemList);
     }
 
@@ -69,6 +75,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
                         holder.updateCheckbox(false);
                         selectedImagesMap.remove(position);
                     }
+                    listener.onImageClick(selectedImagesMap, getItemCount());
                 }
             });
             holder.updateCheckbox(images.isSelected());
