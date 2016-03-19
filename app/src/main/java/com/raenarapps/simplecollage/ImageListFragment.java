@@ -1,7 +1,9 @@
 package com.raenarapps.simplecollage;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import com.raenarapps.simplecollage.network.InstagramService;
 import com.raenarapps.simplecollage.pojo.InstagramMedia;
 import com.raenarapps.simplecollage.pojo.Item;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -33,9 +36,10 @@ public class ImageListFragment extends Fragment implements
         ImageListAdapter.OnImageClickListener, Callback<InstagramMedia> {
 
     private static final String TAG = ImageListFragment.class.getSimpleName();
-    public static final String JSON_INSTAGRAM_MEDIA = "JSON_INSTAGRAM_MEDIA";
-    public static final String IMAGES_TOTAL_COUNT = "IMAGES_TOTAL_COUNT";
-    public static final String IMAGES_SELECTED_COUNT = "IMAGES_SELECTED_COUNT";
+    private static final String JSON_INSTAGRAM_MEDIA = "JSON_INSTAGRAM_MEDIA";
+    private static final String IMAGES_TOTAL_COUNT = "IMAGES_TOTAL_COUNT";
+    private static final String IMAGES_SELECTED_COUNT = "IMAGES_SELECTED_COUNT";
+
     Button buttonGET;
     private RecyclerView recyclerView;
     private InstagramMedia instagramMedia;
@@ -74,10 +78,21 @@ public class ImageListFragment extends Fragment implements
             userPhotos.enqueue(this);
         }
         recyclerView.setAdapter(new ImageListAdapter(items, getContext(), this));
+        selectedImagesMap = ((ImageListAdapter) recyclerView.getAdapter()).getSelectedImagesMap();
 
         buttonGET.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (imagesSelectedCount >= Utility.COLLAGE_IMAGES_COUNT){
+                    Collection<String> values = selectedImagesMap.values();
+                    String[] selectedUrls = values.toArray(new String[values.size()]);
+                    Intent collageIntent = new Intent(getContext(), CollageActivity.class);
+                    collageIntent.putExtra(Utility.SELECTED_URLS_ARRAY, selectedUrls);
+                    startActivity(collageIntent);
+                }else {
+                    Snackbar snackbar = Snackbar.make(v, R.string.snackbar_min_count,Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+                }
             }
         });
         return rootView;
@@ -99,9 +114,12 @@ public class ImageListFragment extends Fragment implements
     }
 
     private void updateActionBar(int countSelected, int countTotal) {
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(countSelected + " из " + countTotal);
+        if (getActivity() != null) {
+            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setTitle(countSelected
+                        + getContext().getString(R.string.actionbar_selected_count) + countTotal);
+            }
         }
     }
 
