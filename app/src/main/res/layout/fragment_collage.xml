@@ -1,56 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <GridLayout
+    <android.support.percent.PercentRelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonDraw">
 
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:layout_column="0"
-            android:layout_row="0"
-            android:padding="2dp"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="4dp"
+            app:layout_heightPercent="67%"
+            app:layout_widthPercent="40%"
+            tools:src="@mipmap/ic_launcher" />
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:layout_column="1"
-            android:layout_row="0"
-            android:padding="2dp"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="4dp"
+            android:layout_toEndOf="@id/imageView1"
+            android:layout_toRightOf="@id/imageView1"
+            app:layout_heightPercent="45%"
+            app:layout_widthPercent="60%"
+            tools:src="@mipmap/ic_launcher" />
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:layout_column="0"
-            android:layout_row="1"
-            android:padding="2dp"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_below="@id/imageView1"
+            android:layout_margin="4dp"
+            app:layout_heightPercent="33%"
+            app:layout_widthPercent="40%"
+            tools:src="@mipmap/ic_launcher" />
 
         <ImageView
             android:id="@+id/imageView4"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:layout_column="1"
-            android:layout_row="1"
-            android:padding="2dp"
-            android:src="@mipmap/ic_launcher" />
-    </GridLayout>
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_below="@id/imageView2"
+            android:layout_margin="4dp"
+            android:layout_toEndOf="@id/imageView1"
+            android:layout_toRightOf="@id/imageView1"
+            app:layout_heightPercent="55%"
+            app:layout_widthPercent="60%"
+            tools:src="@mipmap/ic_launcher" />
+    </android.support.percent.PercentRelativeLayout>
 
-    <TextView
-        android:id="@+id/textView"
+    <Button
+        android:id="@+id/buttonDraw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
         android:layout_gravity="center_horizontal"
-        android:text="New Text" />
+        android:text="draw" />
 
-</LinearLayout>
+</RelativeLayout>
