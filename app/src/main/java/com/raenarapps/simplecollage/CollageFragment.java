@@ -2,7 +2,10 @@ package com.raenarapps.simplecollage;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -36,6 +39,9 @@ public class CollageFragment extends Fragment {
     private Set<Integer> usedCombinations;
     private ArrayList<String> shuffleList;
     private long combinationsCount;
+    private SensorManager sensorManager;
+    private Sensor sensorAccelerometer;
+    private ShakeDetector shakeDetector;
 
     @Nullable
     @Override
@@ -69,18 +75,37 @@ public class CollageFragment extends Fragment {
         buttonDraw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                shufflePictures();
-
-//                View collageView = rootView.findViewById(R.id.layoutCollage);
-//                collageView.setDrawingCacheEnabled(true);
-//                collageView.buildDrawingCache();
-//                Bitmap drawingCache = collageView.getDrawingCache();
-//                imageView2.setImageBitmap(drawingCache);
-//                saveBitmap(drawingCache);
+                View collageView = rootView.findViewById(R.id.layoutCollage);
+                collageView.setDrawingCacheEnabled(true);
+                collageView.buildDrawingCache();
+                Bitmap drawingCache = collageView.getDrawingCache();
+                imageView2.setImageBitmap(drawingCache);
+                saveBitmap(drawingCache);
             }
         });
+        sensorManager = (SensorManager) getContext().getSystemService(Context.SENSOR_SERVICE);
+        shakeDetector = new ShakeDetector(new ShakeDetector.OnShakeListener() {
+            @Override
+            public void onShake(int count) {
+                Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+                shufflePictures();
+                v.vibrate(200);
+            }
+        });
+        sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sensorManager.registerListener(shakeDetector,sensorAccelerometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(shakeDetector);
     }
 
     private void shufflePictures() {
