@@ -19,20 +19,27 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 public class CollageFragment extends Fragment {
-    private static final String TAG = "qwe";
-    Button buttonDraw;
+    private static final String TAG = CollageFragment.class.getSimpleName();
+    private ImageView imageView1;
     private ImageView imageView2;
+    private ImageView imageView3;
+    private ImageView imageView4;
+    private Set<Integer> usedCombinations;
+    private ArrayList<String> shuffleList;
+    private long combinationsCount;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ImageView imageView1;
-        ImageView imageView3;
-        ImageView imageView4;
         final View rootView = inflater.inflate(R.layout.fragment_collage, container, false);
         imageView1 = (ImageView) rootView.findViewById(R.id.imageView1);
         imageView2 = (ImageView) rootView.findViewById(R.id.imageView2);
@@ -40,34 +47,89 @@ public class CollageFragment extends Fragment {
         imageView4 = (ImageView) rootView.findViewById(R.id.imageView4);
         String[] urlArray = getArguments().getStringArray(Utility.SELECTED_URLS_ARRAY);
 
-        Picasso.with(getContext()).load(urlArray[0])
+        shuffleList = new ArrayList<>(Arrays.asList(urlArray));
+        combinationsCount = getCombinationsCount(shuffleList.size());
+        usedCombinations = new TreeSet<>();
+        usedCombinations.add(shuffleList.hashCode());
+
+        Picasso.with(getContext()).load(shuffleList.get(0))
                 .fit().centerCrop()
                 .into(imageView1);
-        Picasso.with(getContext()).load(urlArray[1])
+        Picasso.with(getContext()).load(shuffleList.get(1))
                 .fit().centerCrop()
                 .into(imageView2);
-        Picasso.with(getContext()).load(urlArray[2])
+        Picasso.with(getContext()).load(shuffleList.get(2))
                 .fit().centerCrop()
                 .into(imageView3);
-        Picasso.with(getContext()).load(urlArray[3])
+        Picasso.with(getContext()).load(shuffleList.get(3))
                 .fit().centerCrop()
                 .into(imageView4);
 
-        buttonDraw = (Button) rootView.findViewById(R.id.buttonDraw);
+        Button buttonDraw = (Button) rootView.findViewById(R.id.buttonDraw);
         buttonDraw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View collageView = rootView.findViewById(R.id.layoutCollage);
-                collageView.setDrawingCacheEnabled(true);
-                collageView.buildDrawingCache();
-                Bitmap drawingCache = collageView.getDrawingCache();
-                imageView2.setImageBitmap(drawingCache);
-                saveBitmap(drawingCache);
+
+                shufflePictures();
+
+//                View collageView = rootView.findViewById(R.id.layoutCollage);
+//                collageView.setDrawingCacheEnabled(true);
+//                collageView.buildDrawingCache();
+//                Bitmap drawingCache = collageView.getDrawingCache();
+//                imageView2.setImageBitmap(drawingCache);
+//                saveBitmap(drawingCache);
             }
         });
-
         return rootView;
     }
+
+    private void shufflePictures() {
+        if (usedCombinations.size() < combinationsCount) {
+            boolean combinationFound = false;
+            do {
+                Collections.shuffle(shuffleList);
+                int hashCodeNew = shuffleList.hashCode();
+                if (!usedCombinations.contains(hashCodeNew)) {
+                    usedCombinations.add(hashCodeNew);
+                    Picasso.with(getContext()).load(shuffleList.get(0))
+                            .fit().centerCrop()
+                            .into(imageView1);
+                    Picasso.with(getContext()).load(shuffleList.get(1))
+                            .fit().centerCrop()
+                            .into(imageView2);
+                    Picasso.with(getContext()).load(shuffleList.get(2))
+                            .fit().centerCrop()
+                            .into(imageView3);
+                    Picasso.with(getContext()).load(shuffleList.get(3))
+                            .fit().centerCrop()
+                            .into(imageView4);
+                    combinationFound = true;
+                }
+            } while (!combinationFound);
+        } else {
+            Toast.makeText(getContext(), "all unique combinations have been used", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private long getCombinationsCount(int size) {
+        //count = n!/(n-k)!
+        // n - number of elements (selected images count), k - arrangement size (4 images collage)
+        //https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D0%B7%D0%BC%D0%B5%D1%89%D0%B5%D0%BD%D0%B8%D0%B5
+        long factorial1 = getFactorial(size);
+        long factorial2 = getFactorial(size - Utility.COLLAGE_IMAGES_COUNT);
+        return factorial1 / factorial2;
+    }
+
+    private long getFactorial(int number) {
+        long factorial = 1;
+        if (number > 1) {
+            for (int i = 1; i <= number; i++) {
+                factorial = factorial * i;
+            }
+        }
+        return factorial;
+    }
+
 
     public void saveBitmap(Bitmap bitmap) {
         File directory = getContext().getDir("collages", Context.MODE_PRIVATE);
