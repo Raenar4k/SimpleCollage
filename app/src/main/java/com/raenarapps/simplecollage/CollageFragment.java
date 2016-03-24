@@ -26,8 +26,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 
 public class CollageFragment extends Fragment {
@@ -51,12 +52,13 @@ public class CollageFragment extends Fragment {
         imageView2 = (ImageView) rootView.findViewById(R.id.imageView2);
         imageView3 = (ImageView) rootView.findViewById(R.id.imageView3);
         imageView4 = (ImageView) rootView.findViewById(R.id.imageView4);
-        String[] urlArray = getArguments().getStringArray(Utility.SELECTED_URLS_ARRAY);
 
+        String[] urlArray = getArguments().getStringArray(Utility.SELECTED_URLS_ARRAY);
         shuffleList = new ArrayList<>(Arrays.asList(urlArray));
         combinationsCount = getCombinationsCount(shuffleList.size());
-        usedCombinations = new TreeSet<>();
-        usedCombinations.add(shuffleList.hashCode());
+        usedCombinations = new HashSet<>();
+        List<String> shortList = shuffleList.subList(0, Utility.COLLAGE_IMAGES_COUNT);
+        usedCombinations.add(shortList.hashCode());
 
         Picasso.with(getContext()).load(shuffleList.get(0))
                 .fit().centerCrop()
@@ -99,7 +101,7 @@ public class CollageFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        sensorManager.registerListener(shakeDetector,sensorAccelerometer, SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(shakeDetector, sensorAccelerometer, SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
@@ -113,7 +115,8 @@ public class CollageFragment extends Fragment {
             boolean combinationFound = false;
             do {
                 Collections.shuffle(shuffleList);
-                int hashCodeNew = shuffleList.hashCode();
+                List<String> shortList = shuffleList.subList(0, Utility.COLLAGE_IMAGES_COUNT);
+                int hashCodeNew = shortList.hashCode();
                 if (!usedCombinations.contains(hashCodeNew)) {
                     usedCombinations.add(hashCodeNew);
                     Picasso.with(getContext()).load(shuffleList.get(0))
