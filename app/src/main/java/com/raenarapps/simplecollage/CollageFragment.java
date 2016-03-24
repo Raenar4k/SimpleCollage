@@ -28,16 +28,17 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 public class CollageFragment extends Fragment {
     private static final String TAG = CollageFragment.class.getSimpleName();
+    public static final String SHUFFLE_LIST = "SHUFFLE_LIST";
+    public static final String USED_COMBINATIONS = "USED_COMBINATIONS";
     private ImageView imageView1;
     private ImageView imageView2;
     private ImageView imageView3;
     private ImageView imageView4;
-    private Set<Integer> usedCombinations;
+    private HashSet<Integer> usedCombinations;
     private ArrayList<String> shuffleList;
     private long combinationsCount;
     private SensorManager sensorManager;
@@ -53,12 +54,17 @@ public class CollageFragment extends Fragment {
         imageView3 = (ImageView) rootView.findViewById(R.id.imageView3);
         imageView4 = (ImageView) rootView.findViewById(R.id.imageView4);
 
-        String[] urlArray = getArguments().getStringArray(Utility.SELECTED_URLS_ARRAY);
-        shuffleList = new ArrayList<>(Arrays.asList(urlArray));
+        if (savedInstanceState != null){
+            shuffleList = savedInstanceState.getStringArrayList(SHUFFLE_LIST);
+            usedCombinations = (HashSet<Integer>) savedInstanceState.getSerializable(USED_COMBINATIONS);
+        } else {
+            String[] urlArray = getArguments().getStringArray(Utility.SELECTED_URLS_ARRAY);
+            shuffleList = new ArrayList<>(Arrays.asList(urlArray));
+            usedCombinations = new HashSet<>();
+            List<String> shortList = shuffleList.subList(0, Utility.COLLAGE_IMAGES_COUNT);
+            usedCombinations.add(shortList.hashCode());
+        }
         combinationsCount = getCombinationsCount(shuffleList.size());
-        usedCombinations = new HashSet<>();
-        List<String> shortList = shuffleList.subList(0, Utility.COLLAGE_IMAGES_COUNT);
-        usedCombinations.add(shortList.hashCode());
 
         Picasso.with(getContext()).load(shuffleList.get(0))
                 .fit().centerCrop()
@@ -179,5 +185,12 @@ public class CollageFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putStringArrayList(SHUFFLE_LIST, shuffleList);
+        bundle.putSerializable(USED_COMBINATIONS, usedCombinations);
     }
 }
