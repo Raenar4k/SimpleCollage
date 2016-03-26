@@ -52,7 +52,7 @@ public class ImageListFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        buttonGET = (Button) rootView.findViewById(R.id.buttonGET);
+        buttonGET = (Button) rootView.findViewById(R.id.buttonGet);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<Item> items = null;

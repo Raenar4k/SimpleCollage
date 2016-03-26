@@ -73,7 +73,7 @@ public class CollageFragment extends Fragment {
                 .fit().centerCrop()
                 .into(imageView4);
 
-        Button buttonDraw = (Button) rootView.findViewById(R.id.buttonDraw);
+        Button buttonDraw = (Button) rootView.findViewById(R.id.buttonShare);
         buttonDraw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Simple Collage</string>
-    <string name="snackbar_min_count">Необходимо выбрать не менее 4х фотографий</string>
-    <string name="actionbar_selected_count">" из "</string>
+    <string name="snackbar_min_count">Select 4 or more images</string>
+    <string name="actionbar_selected_count">" out of "</string>
+    <string name="button_share">Share</string>
+    <string name="button_get">Get collage</string>
 </resources>

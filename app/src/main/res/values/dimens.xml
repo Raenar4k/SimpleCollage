@@ -2,4 +2,5 @@
     <dimen name="activity_horizontal_margin">8dp</dimen>
     <dimen name="activity_vertical_margin">8dp</dimen>
     <dimen name="card_height">136dp</dimen>
+    <dimen name="button_height">48dp</dimen>
 </resources>

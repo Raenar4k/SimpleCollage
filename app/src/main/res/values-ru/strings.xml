@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Simple Collage</string>
+    <string name="actionbar_selected_count">" из "</string>
+    <string name="button_get">Давай коллаж</string>
+    <string name="button_share">Поделиться</string>
+    <string name="snackbar_min_count">Необходимо выбрать не менее 4х фотографий</string>
+</resources>
