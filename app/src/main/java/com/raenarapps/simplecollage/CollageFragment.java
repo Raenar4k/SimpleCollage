@@ -17,15 +17,9 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -54,7 +48,7 @@ public class CollageFragment extends Fragment {
         imageView3 = (ImageView) rootView.findViewById(R.id.imageView3);
         imageView4 = (ImageView) rootView.findViewById(R.id.imageView4);
 
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             shuffleList = savedInstanceState.getStringArrayList(SHUFFLE_LIST);
             usedCombinations = (HashSet<Integer>) savedInstanceState.getSerializable(USED_COMBINATIONS);
         } else {
@@ -87,8 +81,7 @@ public class CollageFragment extends Fragment {
                 collageView.setDrawingCacheEnabled(true);
                 collageView.buildDrawingCache();
                 Bitmap drawingCache = collageView.getDrawingCache();
-                imageView2.setImageBitmap(drawingCache);
-                saveBitmap(drawingCache);
+                new ShareTask(getContext()).execute(drawingCache);
             }
         });
         sensorManager = (SensorManager) getContext().getSystemService(Context.SENSOR_SERVICE);
@@ -162,29 +155,6 @@ public class CollageFragment extends Fragment {
             }
         }
         return factorial;
-    }
-
-
-    public void saveBitmap(Bitmap bitmap) {
-        File directory = getContext().getDir("collages", Context.MODE_PRIVATE);
-        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
-        String fileName = "Collage_" + timeStamp + ".png";
-        File newBitmapFile = new File(directory, fileName);
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(newBitmapFile);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            Toast.makeText(getContext(), "Saved to " + newBitmapFile.getAbsolutePath(),
-                    Toast.LENGTH_LONG).show();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
