@@ -1,6 +1,8 @@
 package com.raenarapps.simplecollage;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -8,6 +10,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +31,7 @@ public class CollageFragment extends Fragment {
     private static final String TAG = CollageFragment.class.getSimpleName();
     public static final String SHUFFLE_LIST = "SHUFFLE_LIST";
     public static final String USED_COMBINATIONS = "USED_COMBINATIONS";
+    private static final int PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private ImageView imageView1;
     private ImageView imageView2;
     private ImageView imageView3;
@@ -77,11 +81,15 @@ public class CollageFragment extends Fragment {
         buttonDraw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View collageView = rootView.findViewById(R.id.layoutCollage);
-                collageView.setDrawingCacheEnabled(true);
-                collageView.buildDrawingCache();
-                Bitmap drawingCache = collageView.getDrawingCache();
-                new ShareTask(getContext()).execute(drawingCache);
+                if (ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
+                } else {
+                    shareCollage(rootView);
+                }
             }
         });
         sensorManager = (SensorManager) getContext().getSystemService(Context.SENSOR_SERVICE);
@@ -95,6 +103,14 @@ public class CollageFragment extends Fragment {
         });
         sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         return rootView;
+    }
+
+    private void shareCollage(View rootView) {
+        View collageView = rootView.findViewById(R.id.layoutCollage);
+        collageView.setDrawingCacheEnabled(true);
+        collageView.buildDrawingCache();
+        Bitmap drawingCache = collageView.getDrawingCache();
+        new ShareTask(getContext()).execute(drawingCache);
     }
 
     @Override
@@ -155,6 +171,17 @@ public class CollageFragment extends Fragment {
             }
         }
         return factorial;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode){
+            case PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    shareCollage(getView());
+                }
+                break;
+        }
     }
 
     @Override
