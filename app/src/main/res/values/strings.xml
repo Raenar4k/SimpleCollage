@@ -4,4 +4,9 @@
     <string name="actionbar_selected_count">" out of "</string>
     <string name="button_share">Share</string>
     <string name="button_get">Get collage</string>
+    <string name="button_search">Search</string>
+    <string name="edittext_hint">Search</string>
+    <string name="toast_request_fail">Failed to load; Check internet connection</string>
+    <string name="toast_request_user_not_found">User not found</string>
+    <string name="toast_request_user_0_images">User has no images</string>
 </resources>

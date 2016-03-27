@@ -5,4 +5,9 @@
     <string name="button_get">Давай коллаж</string>
     <string name="button_share">Поделиться</string>
     <string name="snackbar_min_count">Необходимо выбрать не менее 4х фотографий</string>
+    <string name="edittext_hint">Поиск</string>
+    <string name="button_search">Поиск</string>
+    <string name="toast_request_fail">Ошибка; Проверьте соединение с интернетом</string>
+    <string name="toast_request_user_0_images">У пользователя нет фотографий</string>
+    <string name="toast_request_user_not_found">Пользователь не найден</string>
 </resources>
