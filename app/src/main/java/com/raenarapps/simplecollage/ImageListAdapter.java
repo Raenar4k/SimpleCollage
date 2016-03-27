@@ -80,10 +80,12 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
             });
             holder.updateCheckbox(images.isSelected());
         }
-        holder.title.setText(item.getCaption().getText());
+        if (item.getCaption()!=null){
+            holder.title.setText(item.getCaption().getText());
+            Long timeInMillis = Long.valueOf(item.getCaption().getCreatedTime()) * 1000;
+            holder.date.setText(Utility.getFormattedDate(timeInMillis));
+        }
         holder.likes.setText(item.getLikes().getCount().toString());
-        Long timeInMillis = Long.valueOf(item.getCaption().getCreatedTime()) * 1000;
-        holder.date.setText(Utility.getFormattedDate(timeInMillis));
     }
 
     public HashMap<Integer,String> getSelectedImagesMap(){
