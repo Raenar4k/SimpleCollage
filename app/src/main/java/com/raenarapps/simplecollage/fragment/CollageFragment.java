@@ -11,6 +11,7 @@ import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ public class CollageFragment extends Fragment {
     private SensorManager sensorManager;
     private Sensor sensorAccelerometer;
     private ShakeDetector shakeDetector;
+    private AlertDialog progressDialog;
 
     @Nullable
     @Override
@@ -106,6 +108,8 @@ public class CollageFragment extends Fragment {
             }
         });
         sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        progressDialog = new AlertDialog.Builder(getContext())
+                .setView(R.layout.dialog_progress).create();
         return rootView;
     }
 
@@ -114,6 +118,7 @@ public class CollageFragment extends Fragment {
         collageView.setDrawingCacheEnabled(true);
         collageView.buildDrawingCache();
         Bitmap drawingCache = collageView.getDrawingCache();
+        progressDialog.show();
         new ShareTask(getContext()).execute(drawingCache);
     }
 
@@ -127,6 +132,9 @@ public class CollageFragment extends Fragment {
     public void onPause() {
         super.onPause();
         sensorManager.unregisterListener(shakeDetector);
+        if(progressDialog != null && progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
     }
 
     private void shufflePictures() {

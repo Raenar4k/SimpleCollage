@@ -10,4 +10,5 @@
     <string name="toast_request_fail">Ошибка; Проверьте соединение с интернетом</string>
     <string name="toast_request_user_0_images">У пользователя нет фотографий</string>
     <string name="toast_request_user_not_found">Пользователь не найден</string>
+    <string name="dialog_progress">Сохраняем коллаж</string>
 </resources>
