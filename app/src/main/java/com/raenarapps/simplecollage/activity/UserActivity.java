@@ -1,9 +1,12 @@
-package com.raenarapps.simplecollage;
+package com.raenarapps.simplecollage.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+
+import com.raenarapps.simplecollage.R;
+import com.raenarapps.simplecollage.fragment.UserFragment;
 
 public class UserActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.raenarapps.simplecollage;
+package com.raenarapps.simplecollage.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

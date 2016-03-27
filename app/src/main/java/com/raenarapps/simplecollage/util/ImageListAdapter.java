@@ -1,4 +1,4 @@
-package com.raenarapps.simplecollage;
+package com.raenarapps.simplecollage.util;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.raenarapps.simplecollage.R;
 import com.raenarapps.simplecollage.pojo.Images;
 import com.raenarapps.simplecollage.pojo.Item;
 import com.squareup.picasso.Picasso;
@@ -22,7 +23,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
     private HashMap<Integer,String> selectedImagesMap;
     private OnImageClickListener listener;
 
-    interface OnImageClickListener{
+    public interface OnImageClickListener{
         void onImageClick(HashMap<Integer,String> selectedImagesMap, int totalCount);
     }
 

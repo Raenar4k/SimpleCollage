@@ -1,4 +1,4 @@
-package com.raenarapps.simplecollage;
+package com.raenarapps.simplecollage.fragment;
 
 import android.Manifest;
 import android.content.Context;
@@ -18,6 +18,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.raenarapps.simplecollage.R;
+import com.raenarapps.simplecollage.util.ShakeDetector;
+import com.raenarapps.simplecollage.util.ShareTask;
+import com.raenarapps.simplecollage.util.Utility;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.raenarapps.simplecollage;
+package com.raenarapps.simplecollage.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +15,12 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.raenarapps.simplecollage.R;
+import com.raenarapps.simplecollage.activity.ImageListActivity;
 import com.raenarapps.simplecollage.network.InstagramService;
 import com.raenarapps.simplecollage.pojo.InstagramMedia;
 import com.raenarapps.simplecollage.pojo.Item;
+import com.raenarapps.simplecollage.util.Utility;
 
 import java.util.List;
 
@@ -78,7 +81,7 @@ public class UserFragment extends Fragment implements Callback<InstagramMedia> {
                 if (itemList.size() == 0) {
                     Toast.makeText(getContext(), R.string.toast_request_user_0_images, Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent intent = new Intent(context, MainActivity.class);
+                    Intent intent = new Intent(context, ImageListActivity.class);
                     String json = new Gson().toJson(instagramMedia);
                     intent.putExtra(Utility.JSON_INSTAGRAM_MEDIA, json);
                     context.startActivity(intent);

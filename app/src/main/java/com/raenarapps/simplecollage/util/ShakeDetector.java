@@ -1,4 +1,4 @@
-package com.raenarapps.simplecollage;
+package com.raenarapps.simplecollage.util;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;

@@ -1,4 +1,4 @@
-package com.raenarapps.simplecollage;
+package com.raenarapps.simplecollage.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,8 +15,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.google.gson.Gson;
+import com.raenarapps.simplecollage.R;
+import com.raenarapps.simplecollage.activity.CollageActivity;
 import com.raenarapps.simplecollage.pojo.InstagramMedia;
 import com.raenarapps.simplecollage.pojo.Item;
+import com.raenarapps.simplecollage.util.ImageListAdapter;
+import com.raenarapps.simplecollage.util.Utility;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -40,7 +44,7 @@ public class ImageListFragment extends Fragment implements
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_list, container, false);
         Button buttonGET = (Button) rootView.findViewById(R.id.buttonGet);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

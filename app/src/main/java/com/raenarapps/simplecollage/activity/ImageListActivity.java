@@ -1,18 +1,22 @@
-package com.raenarapps.simplecollage;
+package com.raenarapps.simplecollage.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
+import com.raenarapps.simplecollage.R;
+import com.raenarapps.simplecollage.fragment.ImageListFragment;
+import com.raenarapps.simplecollage.util.Utility;
+
+public class ImageListActivity extends AppCompatActivity {
+    private static final String TAG = ImageListActivity.class.getSimpleName();
     public static final String IMAGE_LIST_FRAGMENT_TAG = "ImageListFragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_list);
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentByTag(IMAGE_LIST_FRAGMENT_TAG);
         if (fragment == null) {

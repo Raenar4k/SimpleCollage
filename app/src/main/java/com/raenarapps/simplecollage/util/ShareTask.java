@@ -1,4 +1,4 @@
-package com.raenarapps.simplecollage;
+package com.raenarapps.simplecollage.util;
 
 import android.content.Context;
 import android.content.Intent;
