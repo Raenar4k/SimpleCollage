@@ -5,13 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.percent.PercentRelativeLayout
+    <FrameLayout
         android:id="@+id/layoutCollage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_above="@+id/buttonShare"
         android:background="@android:color/white"
-        android:padding="4dp">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    <android.support.percent.PercentRelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/card"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
+        android:paddingBottom="12dp"
+        android:paddingTop="8dp">
 
         <ImageView
             android:id="@+id/imageView1"
@@ -55,7 +63,7 @@
             app:layout_widthPercent="60%"
             tools:src="@mipmap/ic_launcher" />
     </android.support.percent.PercentRelativeLayout>
-
+    </FrameLayout>
     <Button
         android:id="@+id/buttonShare"
         style="@style/Widget.AppCompat.Button.Borderless"
