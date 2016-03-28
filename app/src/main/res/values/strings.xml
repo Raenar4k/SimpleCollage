@@ -10,4 +10,5 @@
     <string name="toast_request_user_not_found">User not found</string>
     <string name="toast_request_user_0_images">User has no images</string>
     <string name="dialog_progress">Saving collage</string>
+    <string name="toast_request_media_null">Failed to get images; User account may be private</string>
 </resources>

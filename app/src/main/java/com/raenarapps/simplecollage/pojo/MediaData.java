@@ -1,49 +1,50 @@
 
 package com.raenarapps.simplecollage.pojo;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-@Generated("org.jsonschema2pojo")
-public class Item {
+import java.util.ArrayList;
+import java.util.List;
 
-    @SerializedName("can_delete_comments")
+import javax.annotation.Generated;
+
+@Generated("org.jsonschema2pojo")
+public class MediaData {
+
+    @SerializedName("attribution")
     @Expose
-    private Boolean canDeleteComments;
-    @SerializedName("code")
+    private Object attribution;
+    @SerializedName("tags")
     @Expose
-    private String code;
+    private List<String> tags = new ArrayList<String>();
     @SerializedName("location")
     @Expose
-    private Location location;
-    @SerializedName("images")
-    @Expose
-    private Images images;
-    @SerializedName("can_view_comments")
-    @Expose
-    private Boolean canViewComments;
+    private Object location;
     @SerializedName("comments")
     @Expose
     private Comments comments;
-    @SerializedName("alt_media_url")
+    @SerializedName("filter")
     @Expose
-    private Object altMediaUrl;
-    @SerializedName("caption")
+    private String filter;
+    @SerializedName("created_time")
     @Expose
-    private Caption caption;
+    private String createdTime;
     @SerializedName("link")
     @Expose
     private String link;
     @SerializedName("likes")
     @Expose
     private Likes likes;
-    @SerializedName("created_time")
+    @SerializedName("images")
     @Expose
-    private String createdTime;
-    @SerializedName("user_has_liked")
+    private Images images;
+    @SerializedName("users_in_photo")
     @Expose
-    private Boolean userHasLiked;
+    private List<Object> usersInPhoto = new ArrayList<Object>();
+    @SerializedName("caption")
+    @Expose
+    private Caption caption;
     @SerializedName("type")
     @Expose
     private String type;
@@ -60,37 +61,37 @@ public class Item {
     /**
      * 
      * @return
-     *     The canDeleteComments
+     *     The attribution
      */
-    public Boolean getCanDeleteComments() {
-        return canDeleteComments;
+    public Object getAttribution() {
+        return attribution;
     }
 
     /**
      * 
-     * @param canDeleteComments
-     *     The can_delete_comments
+     * @param attribution
+     *     The attribution
      */
-    public void setCanDeleteComments(Boolean canDeleteComments) {
-        this.canDeleteComments = canDeleteComments;
+    public void setAttribution(Object attribution) {
+        this.attribution = attribution;
     }
 
     /**
      * 
      * @return
-     *     The code
+     *     The tags
      */
-    public String getCode() {
-        return code;
+    public List<String> getTags() {
+        return tags;
     }
 
     /**
      * 
-     * @param code
-     *     The code
+     * @param tags
+     *     The tags
      */
-    public void setCode(String code) {
-        this.code = code;
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     /**
@@ -98,7 +99,7 @@ public class Item {
      * @return
      *     The location
      */
-    public Location getLocation() {
+    public Object getLocation() {
         return location;
     }
 
@@ -107,44 +108,8 @@ public class Item {
      * @param location
      *     The location
      */
-    public void setLocation(Location location) {
+    public void setLocation(Object location) {
         this.location = location;
-    }
-
-    /**
-     * 
-     * @return
-     *     The images
-     */
-    public Images getImages() {
-        return images;
-    }
-
-    /**
-     * 
-     * @param images
-     *     The images
-     */
-    public void setImages(Images images) {
-        this.images = images;
-    }
-
-    /**
-     * 
-     * @return
-     *     The canViewComments
-     */
-    public Boolean getCanViewComments() {
-        return canViewComments;
-    }
-
-    /**
-     * 
-     * @param canViewComments
-     *     The can_view_comments
-     */
-    public void setCanViewComments(Boolean canViewComments) {
-        this.canViewComments = canViewComments;
     }
 
     /**
@@ -168,37 +133,37 @@ public class Item {
     /**
      * 
      * @return
-     *     The altMediaUrl
+     *     The filter
      */
-    public Object getAltMediaUrl() {
-        return altMediaUrl;
+    public String getFilter() {
+        return filter;
     }
 
     /**
      * 
-     * @param altMediaUrl
-     *     The alt_media_url
+     * @param filter
+     *     The filter
      */
-    public void setAltMediaUrl(Object altMediaUrl) {
-        this.altMediaUrl = altMediaUrl;
+    public void setFilter(String filter) {
+        this.filter = filter;
     }
 
     /**
      * 
      * @return
-     *     The caption
+     *     The createdTime
      */
-    public Caption getCaption() {
-        return caption;
+    public String getCreatedTime() {
+        return createdTime;
     }
 
     /**
      * 
-     * @param caption
-     *     The caption
+     * @param createdTime
+     *     The created_time
      */
-    public void setCaption(Caption caption) {
-        this.caption = caption;
+    public void setCreatedTime(String createdTime) {
+        this.createdTime = createdTime;
     }
 
     /**
@@ -240,37 +205,55 @@ public class Item {
     /**
      * 
      * @return
-     *     The createdTime
+     *     The images
      */
-    public String getCreatedTime() {
-        return createdTime;
+    public Images getImages() {
+        return images;
     }
 
     /**
      * 
-     * @param createdTime
-     *     The created_time
+     * @param images
+     *     The images
      */
-    public void setCreatedTime(String createdTime) {
-        this.createdTime = createdTime;
+    public void setImages(Images images) {
+        this.images = images;
     }
 
     /**
      * 
      * @return
-     *     The userHasLiked
+     *     The usersInPhoto
      */
-    public Boolean getUserHasLiked() {
-        return userHasLiked;
+    public List<Object> getUsersInPhoto() {
+        return usersInPhoto;
     }
 
     /**
      * 
-     * @param userHasLiked
-     *     The user_has_liked
+     * @param usersInPhoto
+     *     The users_in_photo
      */
-    public void setUserHasLiked(Boolean userHasLiked) {
-        this.userHasLiked = userHasLiked;
+    public void setUsersInPhoto(List<Object> usersInPhoto) {
+        this.usersInPhoto = usersInPhoto;
+    }
+
+    /**
+     * 
+     * @return
+     *     The caption
+     */
+    public Caption getCaption() {
+        return caption;
+    }
+
+    /**
+     * 
+     * @param caption
+     *     The caption
+     */
+    public void setCaption(Caption caption) {
+        this.caption = caption;
     }
 
     /**

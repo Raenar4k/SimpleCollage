@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,25 +16,25 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.raenarapps.simplecollage.R;
 import com.raenarapps.simplecollage.activity.ImageListActivity;
-import com.raenarapps.simplecollage.network.InstagramService;
-import com.raenarapps.simplecollage.pojo.InstagramMedia;
-import com.raenarapps.simplecollage.pojo.Item;
+import com.raenarapps.simplecollage.app.CollageApplication;
+import com.raenarapps.simplecollage.network.RestClient;
+import com.raenarapps.simplecollage.network.UserMedia;
+import com.raenarapps.simplecollage.network.UserSearch;
+import com.raenarapps.simplecollage.pojo.MediaData;
+import com.raenarapps.simplecollage.pojo.RecentMedia;
+import com.raenarapps.simplecollage.pojo.SearchData;
+import com.raenarapps.simplecollage.pojo.SearchResult;
 import com.raenarapps.simplecollage.util.Utility;
 
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-
-public class UserFragment extends Fragment implements Callback<InstagramMedia> {
+public class UserFragment extends Fragment implements UserSearch.Listener, UserMedia.Listener {
 
     private static final String TAG = UserFragment.class.getSimpleName();
     private EditText editTextUsername;
     private ProgressBar progressBar;
+    private RestClient restClient;
 
     @Nullable
     @Override
@@ -47,56 +46,84 @@ public class UserFragment extends Fragment implements Callback<InstagramMedia> {
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getUserMedia(editTextUsername.getText().toString());
+                searchForUser(editTextUsername.getText().toString());
             }
         });
+        restClient = ((CollageApplication) getActivity().getApplication()).getRestClient();
         return rootView;
     }
 
-    private void getUserMedia(String userName) {
+    private void searchForUser(String userName) {
         if (userName.length() != 0) {
             progressBar.setVisibility(View.VISIBLE);
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://www.instagram.com/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-            InstagramService service = retrofit.create(InstagramService.class);
-            Call<InstagramMedia> userPhotos = service.getUserPhotos(userName);
-            Log.d(TAG, "enqueue");
-            userPhotos.enqueue(this);
+            restClient.userSearch.searchForUser(userName);
         }
     }
 
+    private void getUserMedia(String userID) {
+        if (userID != null) {
+            progressBar.setVisibility(View.VISIBLE);
+            restClient.userMedia.getUserMedia(userID);
+        }
+    }
 
     @Override
-    public void onResponse(Call<InstagramMedia> call, Response<InstagramMedia> response) {
+    public void onResume() {
+        super.onResume();
+        restClient.userSearch.setListener(this);
+        restClient.userMedia.setListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        restClient.userSearch.clearListener();
+        restClient.userMedia.clearListener();
+    }
+
+    @Override
+    public void onSearchResult(SearchResult searchResult, boolean isSuccess, String userNameQuery) {
+        progressBar.setVisibility(View.INVISIBLE);
         Context context = getContext();
-        if (context != null) {
-            progressBar.setVisibility(View.INVISIBLE);
-            InstagramMedia instagramMedia = response.body();
-            if (instagramMedia == null) {
-                Toast.makeText(getContext(), R.string.toast_request_user_not_found, Toast.LENGTH_SHORT).show();
-            } else {
-                List<Item> itemList = instagramMedia.getItems();
+        if (isSuccess) {
+            if (searchResult != null) {
+                List<SearchData> matchesList = searchResult.getData();
+                String userId;
+                for (int i = 0; i < matchesList.size(); i++) {
+                    SearchData possibleMatch = matchesList.get(i);
+                    if (possibleMatch.getUsername().equals(userNameQuery)) {
+                        userId = possibleMatch.getId();
+                        getUserMedia(userId);
+                        return;
+                    }
+                }
+                Toast.makeText(context, R.string.toast_request_user_not_found, Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(context, R.string.toast_request_fail, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onMediaResult(RecentMedia recentMedia, boolean isSuccess) {
+        progressBar.setVisibility(View.INVISIBLE);
+        Context context = getContext();
+        if (isSuccess) {
+            if (recentMedia != null) {
+                List<MediaData> itemList = recentMedia.getData();
                 if (itemList.size() == 0) {
-                    Toast.makeText(getContext(), R.string.toast_request_user_0_images, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.toast_request_user_0_images, Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(context, ImageListActivity.class);
-                    String json = new Gson().toJson(instagramMedia);
+                    String json = new Gson().toJson(recentMedia);
                     intent.putExtra(Utility.JSON_INSTAGRAM_MEDIA, json);
                     context.startActivity(intent);
                 }
-
+            } else {
+                Toast.makeText(context, R.string.toast_request_media_null, Toast.LENGTH_LONG).show();
             }
-        }
-    }
-
-    @Override
-    public void onFailure(Call<InstagramMedia> call, Throwable t) {
-        Context context = getContext();
-        if (context != null) {
-            progressBar.setVisibility(View.INVISIBLE);
-            Toast.makeText(getContext(), R.string.toast_request_fail, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, R.string.toast_request_fail, Toast.LENGTH_SHORT).show();
         }
     }
 }

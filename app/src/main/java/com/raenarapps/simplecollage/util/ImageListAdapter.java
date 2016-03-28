@@ -11,14 +11,14 @@ import android.widget.TextView;
 
 import com.raenarapps.simplecollage.R;
 import com.raenarapps.simplecollage.pojo.Images;
-import com.raenarapps.simplecollage.pojo.Item;
+import com.raenarapps.simplecollage.pojo.MediaData;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.ViewHolder> {
-    private List<Item> itemList;
+    private List<MediaData> itemList;
     private Context context;
     private HashMap<Integer,String> selectedImagesMap;
     private OnImageClickListener listener;
@@ -27,14 +27,14 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
         void onImageClick(HashMap<Integer,String> selectedImagesMap, int totalCount);
     }
 
-    public ImageListAdapter(List<Item> itemList, Context context, OnImageClickListener listener) {
+    public ImageListAdapter(List<MediaData> itemList, Context context, OnImageClickListener listener) {
         this.itemList = itemList;
         this.context = context;
         this.listener = listener;
         findSelectedImages(itemList);
     }
 
-    private void findSelectedImages(List<Item> itemList) {
+    private void findSelectedImages(List<MediaData> itemList) {
         selectedImagesMap = new HashMap<>();
         if (itemList != null){
             for (int i = 0; i < itemList.size(); i++) {
@@ -55,7 +55,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        Item item = itemList.get(position);
+        MediaData item = itemList.get(position);
         final Images images = item.getImages();
         if (images != null) {
             final String url = images.getStandardResolution().getUrl();

@@ -17,8 +17,8 @@ import android.widget.Button;
 import com.google.gson.Gson;
 import com.raenarapps.simplecollage.R;
 import com.raenarapps.simplecollage.activity.CollageActivity;
-import com.raenarapps.simplecollage.pojo.InstagramMedia;
-import com.raenarapps.simplecollage.pojo.Item;
+import com.raenarapps.simplecollage.pojo.MediaData;
+import com.raenarapps.simplecollage.pojo.RecentMedia;
 import com.raenarapps.simplecollage.util.ImageListAdapter;
 import com.raenarapps.simplecollage.util.Utility;
 
@@ -35,7 +35,7 @@ public class ImageListFragment extends Fragment implements
 
     private static final String TAG = ImageListFragment.class.getSimpleName();
 
-    private InstagramMedia instagramMedia;
+    private RecentMedia recentMedia;
     private HashMap<Integer, String> selectedImagesMap;
     private int imagesTotalCount;
     private int imagesSelectedCount;
@@ -50,14 +50,14 @@ public class ImageListFragment extends Fragment implements
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         if (savedInstanceState != null && savedInstanceState.containsKey(JSON_INSTAGRAM_MEDIA)) {
-            instagramMedia =
-                    new Gson().fromJson(savedInstanceState.getString(JSON_INSTAGRAM_MEDIA), InstagramMedia.class);
+            recentMedia =
+                    new Gson().fromJson(savedInstanceState.getString(JSON_INSTAGRAM_MEDIA), RecentMedia.class);
         } else {
-            instagramMedia =
-                    new Gson().fromJson(getArguments().getString(JSON_INSTAGRAM_MEDIA), InstagramMedia.class);
+            recentMedia =
+                    new Gson().fromJson(getArguments().getString(JSON_INSTAGRAM_MEDIA), RecentMedia.class);
         }
 
-        List<Item> items = instagramMedia.getItems();
+        List<MediaData> items = recentMedia.getData();
         sortList(items);
         recyclerView.setAdapter(new ImageListAdapter(items, getContext(), this));
         selectedImagesMap = ((ImageListAdapter) recyclerView.getAdapter()).getSelectedImagesMap();
@@ -83,10 +83,10 @@ public class ImageListFragment extends Fragment implements
         return rootView;
     }
 
-    private void sortList(List<Item> items) {
-        Collections.sort(items, new Comparator<Item>() {
+    private void sortList(List<MediaData> items) {
+        Collections.sort(items, new Comparator<MediaData>() {
             @Override
-            public int compare(Item lhs, Item rhs) {
+            public int compare(MediaData lhs, MediaData rhs) {
                 return rhs.getLikes().getCount().compareTo(lhs.getLikes().getCount());
             }
         });
@@ -112,8 +112,8 @@ public class ImageListFragment extends Fragment implements
     @Override
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
-        if (instagramMedia != null) {
-            String json = new Gson().toJson(instagramMedia);
+        if (recentMedia != null) {
+            String json = new Gson().toJson(recentMedia);
             bundle.putString(JSON_INSTAGRAM_MEDIA, json);
         }
     }

@@ -1,12 +1,13 @@
 
 package com.raenarapps.simplecollage.pojo;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import javax.annotation.Generated;
+
 @Generated("org.jsonschema2pojo")
-public class Datum {
+public class SearchData {
 
     @SerializedName("username")
     @Expose

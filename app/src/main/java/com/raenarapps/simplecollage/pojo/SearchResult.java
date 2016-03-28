@@ -10,11 +10,11 @@ import java.util.List;
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
-public class Likes {
+public class SearchResult {
 
-    @SerializedName("count")
+    @SerializedName("meta")
     @Expose
-    private Integer count;
+    private Meta meta;
     @SerializedName("data")
     @Expose
     private List<SearchData> data = new ArrayList<SearchData>();
@@ -22,19 +22,19 @@ public class Likes {
     /**
      * 
      * @return
-     *     The count
+     *     The meta
      */
-    public Integer getCount() {
-        return count;
+    public Meta getMeta() {
+        return meta;
     }
 
     /**
      * 
-     * @param count
-     *     The count
+     * @param meta
+     *     The meta
      */
-    public void setCount(Integer count) {
-        this.count = count;
+    public void setMeta(Meta meta) {
+        this.meta = meta;
     }
 
     /**
