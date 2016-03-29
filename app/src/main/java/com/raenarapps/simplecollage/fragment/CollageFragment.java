@@ -74,21 +74,9 @@ public class CollageFragment extends Fragment {
         }
         combinationsCount = getCombinationsCount(shuffleList.size());
 
-        Picasso.with(getContext()).load(shuffleList.get(0))
-                .fit().centerCrop()
-                .into(imageView1);
-        Picasso.with(getContext()).load(shuffleList.get(1))
-                .fit().centerCrop()
-                .into(imageView2);
-        Picasso.with(getContext()).load(shuffleList.get(2))
-                .fit().centerCrop()
-                .into(imageView3);
-        Picasso.with(getContext()).load(shuffleList.get(3))
-                .fit().centerCrop()
-                .into(imageView4);
-
-        Button buttonDraw = (Button) rootView.findViewById(R.id.buttonShare);
-        buttonDraw.setOnClickListener(new View.OnClickListener() {
+        loadImages(shuffleList);
+        Button shareButton = (Button) rootView.findViewById(R.id.buttonShare);
+        shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(getContext(),
@@ -116,7 +104,7 @@ public class CollageFragment extends Fragment {
                 .setView(R.layout.dialog_progress).create();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if (prefs.getBoolean(Utility.FIRST_LAUNCH_KEY, true)){
+        if (prefs.getBoolean(Utility.FIRST_LAUNCH_KEY, true)) {
             shakeDialog = new AlertDialog.Builder(getContext())
                     .setMessage(getContext().getString(R.string.dialog_shake))
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -130,6 +118,21 @@ public class CollageFragment extends Fragment {
             prefs.edit().putBoolean(Utility.FIRST_LAUNCH_KEY, false).apply();
         }
         return rootView;
+    }
+
+    private void loadImages(ArrayList<String> urlList) {
+        Picasso.with(getContext()).load(urlList.get(0))
+                .fit().centerCrop()
+                .into(imageView1);
+        Picasso.with(getContext()).load(urlList.get(1))
+                .fit().centerCrop()
+                .into(imageView2);
+        Picasso.with(getContext()).load(urlList.get(2))
+                .fit().centerCrop()
+                .into(imageView3);
+        Picasso.with(getContext()).load(urlList.get(3))
+                .fit().centerCrop()
+                .into(imageView4);
     }
 
     private void shareCollage(View rootView) {
@@ -151,10 +154,10 @@ public class CollageFragment extends Fragment {
     public void onPause() {
         super.onPause();
         sensorManager.unregisterListener(shakeDetector);
-        if(progressDialog != null && progressDialog.isShowing()){
+        if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
-        if(shakeDialog != null && shakeDialog.isShowing()){
+        if (shakeDialog != null && shakeDialog.isShowing()) {
             shakeDialog.dismiss();
         }
     }
@@ -168,18 +171,7 @@ public class CollageFragment extends Fragment {
                 int hashCodeNew = shortList.hashCode();
                 if (!usedCombinations.contains(hashCodeNew)) {
                     usedCombinations.add(hashCodeNew);
-                    Picasso.with(getContext()).load(shuffleList.get(0))
-                            .fit().centerCrop()
-                            .into(imageView1);
-                    Picasso.with(getContext()).load(shuffleList.get(1))
-                            .fit().centerCrop()
-                            .into(imageView2);
-                    Picasso.with(getContext()).load(shuffleList.get(2))
-                            .fit().centerCrop()
-                            .into(imageView3);
-                    Picasso.with(getContext()).load(shuffleList.get(3))
-                            .fit().centerCrop()
-                            .into(imageView4);
+                    loadImages(shuffleList);
                     combinationFound = true;
                 }
             } while (!combinationFound);
@@ -209,9 +201,9 @@ public class CollageFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode){
+        switch (requestCode) {
             case PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     shareCollage(getView());
                 }
                 break;
