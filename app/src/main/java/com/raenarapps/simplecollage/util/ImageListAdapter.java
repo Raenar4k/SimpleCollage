@@ -58,8 +58,9 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
         MediaData item = itemList.get(position);
         final Images images = item.getImages();
         if (images != null) {
-            final String url = images.getStandardResolution().getUrl();
-            Picasso.with(context).load(url)
+            String thumbnailUrl = images.getLowResolution().getUrl();
+            final String fullSizeUrl = images.getStandardResolution().getUrl();
+            Picasso.with(context).load(thumbnailUrl)
                     .fit()
                     .centerCrop()
                     .into(holder.image);
@@ -70,7 +71,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
                     if (!images.isSelected()) {
                         images.setIsSelected(true);
                         holder.updateCheckbox(true);
-                        selectedImagesMap.put(position, url);
+                        selectedImagesMap.put(position, fullSizeUrl);
                     } else {
                         images.setIsSelected(false);
                         holder.updateCheckbox(false);
