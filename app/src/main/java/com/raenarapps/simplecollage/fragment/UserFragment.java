@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +52,10 @@ public class UserFragment extends Fragment implements UserSearch.Listener, UserM
             }
         });
         restClient = ((CollageApplication) getActivity().getApplication()).getRestClient();
+            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setTitle(getContext().getString(R.string.activity_user_label));
+            }
         return rootView;
     }
 
