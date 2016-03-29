@@ -8,6 +8,8 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.raenarapps.simplecollage.R;
+
 public class ShareTask extends AsyncTask<Bitmap, Void, Void> {
     private Context context;
 
@@ -21,7 +23,7 @@ public class ShareTask extends AsyncTask<Bitmap, Void, Void> {
         if (!inputBitmap.isRecycled()) {
             Bitmap copyBitmap = inputBitmap.copy(inputBitmap.getConfig(), true);
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_TEXT, "#testtest");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_message));
             String uriString = MediaStore.Images.Media.insertImage(context.getContentResolver(),
                     copyBitmap, "shared_collage", "temp file");
             shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(uriString));
