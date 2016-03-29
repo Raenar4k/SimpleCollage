@@ -2,12 +2,15 @@ package com.raenarapps.simplecollage.fragment;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -48,6 +51,7 @@ public class CollageFragment extends Fragment {
     private Sensor sensorAccelerometer;
     private ShakeDetector shakeDetector;
     private AlertDialog progressDialog;
+    private AlertDialog shakeDialog;
 
     @Nullable
     @Override
@@ -110,6 +114,21 @@ public class CollageFragment extends Fragment {
         sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         progressDialog = new AlertDialog.Builder(getContext())
                 .setView(R.layout.dialog_progress).create();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if (prefs.getBoolean(Utility.FIRST_LAUNCH_KEY, true)){
+            shakeDialog = new AlertDialog.Builder(getContext())
+                    .setMessage(getContext().getString(R.string.dialog_shake))
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setView(R.layout.dialog_shake).create();
+            shakeDialog.show();
+            prefs.edit().putBoolean(Utility.FIRST_LAUNCH_KEY, false).apply();
+        }
         return rootView;
     }
 
@@ -134,6 +153,9 @@ public class CollageFragment extends Fragment {
         sensorManager.unregisterListener(shakeDetector);
         if(progressDialog != null && progressDialog.isShowing()){
             progressDialog.dismiss();
+        }
+        if(shakeDialog != null && shakeDialog.isShowing()){
+            shakeDialog.dismiss();
         }
     }
 
@@ -162,7 +184,7 @@ public class CollageFragment extends Fragment {
                 }
             } while (!combinationFound);
         } else {
-            Toast.makeText(getContext(), "all unique combinations have been used", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.collage_combinations, Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -12,4 +12,6 @@
     <string name="toast_request_user_not_found">Пользователь не найден</string>
     <string name="dialog_progress">Сохраняем коллаж</string>
     <string name="toast_request_media_null">Не удалось получить фотографии; Возможно аккаунт является закрытым</string>
+    <string name="dialog_shake">Потрясите телефон в течении 5 секунд и фотографии случайно поменяются местами</string>
+    <string name="collage_combinations">Все уникальные комбинации уже были использованы</string>
 </resources>

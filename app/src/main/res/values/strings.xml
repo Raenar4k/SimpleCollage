@@ -11,4 +11,6 @@
     <string name="toast_request_user_0_images">User has no images</string>
     <string name="dialog_progress">Saving collage</string>
     <string name="toast_request_media_null">Failed to get images; User account may be private</string>
+    <string name="dialog_shake">Shake your device for 5 seconds to re-shuffle the images</string>
+    <string name="collage_combinations">All unique combinations have been used</string>
 </resources>
