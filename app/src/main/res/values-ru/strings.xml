@@ -5,7 +5,7 @@
     <string name="button_get">Давай коллаж</string>
     <string name="button_share">Поделиться</string>
     <string name="snackbar_min_count">Необходимо выбрать не менее 4х фотографий</string>
-    <string name="edittext_hint">Поиск</string>
+    <string name="edittext_hint">Имя пользователя</string>
     <string name="button_search">Поиск</string>
     <string name="toast_request_fail">Ошибка; Проверьте соединение с интернетом</string>
     <string name="toast_request_user_0_images">У пользователя нет фотографий</string>
@@ -14,4 +14,6 @@
     <string name="toast_request_media_null">Не удалось получить фотографии; Возможно аккаунт является закрытым</string>
     <string name="dialog_shake">Потрясите телефон в течении 5 секунд и фотографии случайно поменяются местами</string>
     <string name="collage_combinations">Все уникальные комбинации уже были использованы</string>
+    <string name="activity_collage_label">Коллаж готов</string>
+    <string name="activity_user_label">Найти пользователя</string>
 </resources>

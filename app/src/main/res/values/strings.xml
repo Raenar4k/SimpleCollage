@@ -5,7 +5,7 @@
     <string name="button_share">Share</string>
     <string name="button_get">Get collage</string>
     <string name="button_search">Search</string>
-    <string name="edittext_hint">Search</string>
+    <string name="edittext_hint">Username</string>
     <string name="toast_request_fail">Failed to load; Check internet connection</string>
     <string name="toast_request_user_not_found">User not found</string>
     <string name="toast_request_user_0_images">User has no images</string>
@@ -13,4 +13,6 @@
     <string name="toast_request_media_null">Failed to get images; User account may be private</string>
     <string name="dialog_shake">Shake your device for 5 seconds to re-shuffle the images</string>
     <string name="collage_combinations">All unique combinations have been used</string>
+    <string name="activity_user_label">Search user</string>
+    <string name="activity_collage_label">Collage is ready</string>
 </resources>
